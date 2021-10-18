@@ -37,11 +37,16 @@
     "csb:test": "npm test -- --runInBand --watchAll"
   },
   "dependencies": {
+    "hast-util-to-html": "^8.0.2",
+    "remark": "^14.0.1",
+    "unified": "^10.1.0",
+    "unist-util-visit-parents": "^5.1.0",
     "yargs": "^17.2.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.1",
+    "@types/unist": "^2.0.6",
     "@types/yargs": "^17.0.4",
     "jest": "^27.3.0",
     "nodemon": "^2.0.13",
