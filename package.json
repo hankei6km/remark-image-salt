@@ -16,17 +16,22 @@
     "image"
   ],
   "main": "dist/index.js",
+  "exports": "./dist/index.js",
+  "type": "module",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
   "bin": {
     "image-salt": "dist/main.js"
   },
   "scripts": {
     "start": "npm run build && node dist/main.js",
     "build": "npm run clean && tsc && rimraf dist/test && mv dist/src/* dist/ && rimraf dist/src",
-    "test": "jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "clean": "rimraf \"dist/*\"",
     "upgrade-interactive": "npm-check --update",
     "csb:test": "npm test -- --runInBand --watchAll"
