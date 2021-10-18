@@ -1,4 +1,4 @@
-import countChars from './count';
+import countChars from '../src/count';
 
 describe('countChars()', () => {
   it('should return count of content', async () => {

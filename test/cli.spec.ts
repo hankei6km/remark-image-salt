@@ -1,5 +1,5 @@
 import { PassThrough } from 'stream';
-import cli from './cli';
+import cli from '../src/cli';
 
 describe('cli()', () => {
   it('should return stdout with exitcode=0', async () => {
