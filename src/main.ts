@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
-import cli from './cli.js';
+import yargs from 'yargs'
+import { hideBin } from 'yargs/helpers'
+import cli from './cli.js'
 
-(async () => {
+;(async () => {
   const argv = await yargs(hideBin(process.argv))
     .scriptName('count')
     .usage('$0 [FILE]...')
     .example('$0 foo.ts bar.ts', 'count chars in files')
     .demand(1)
-    .help().argv;
+    .help().argv
 
   process.exit(
     await cli({
@@ -17,5 +17,5 @@ import cli from './cli.js';
       stdout: process.stdout,
       stderr: process.stderr
     })
-  );
-})();
+  )
+})()
