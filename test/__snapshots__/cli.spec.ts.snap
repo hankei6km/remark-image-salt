@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cli() should return stdout with exitcode=0 1`] = `
+"# test
+
+## test1
+
+image-salt-1
+
+<img src=\\"/path/to/iamge1.jpg\\">
+
+## test2
+
+image-salt-2
+
+<img src=\\"/path/to/iamge2.jpg\\">
+"
+`;
