@@ -31,7 +31,7 @@
   "scripts": {
     "start": "npm run build && node dist/main.js",
     "build": "npm run clean && tsc && rimraf dist/test && mv dist/src/* dist/ && rimraf dist/src",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "clean": "rimraf \"dist/*\"",
     "upgrade-interactive": "npm-check --update",
     "csb:test": "npm test -- --runInBand --watchAll"
