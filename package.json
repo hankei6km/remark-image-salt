@@ -41,6 +41,7 @@
     "hast-util-to-html": "^8.0.2",
     "parse5": "^6.0.1",
     "remark": "^14.0.1",
+    "remark-frontmatter": "^4.0.0",
     "unified": "^10.1.0",
     "unist-util-visit-parents": "^5.1.0",
     "yargs": "^17.2.1"

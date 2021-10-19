@@ -1,7 +1,9 @@
 import { Readable, Writable } from 'stream'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
+import remarkFrontmatter from 'remark-frontmatter'
 import stringify from 'remark-stringify'
+
 import { remarkImageSalt } from './image-salt.js'
 
 type Opts = {
@@ -24,6 +26,7 @@ const cli = async ({
     })
     const m = await unified()
       .use(remarkParse)
+      .use(remarkFrontmatter, ['yaml', 'toml'])
       .use(remarkImageSalt, { tagName })
       .use(stringify)
       .freeze()
