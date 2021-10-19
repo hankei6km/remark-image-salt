@@ -5,7 +5,7 @@ import { Element, Properties } from 'hast'
 import { visitParents } from 'unist-util-visit-parents'
 import { toHtml } from 'hast-util-to-html'
 import { attrs } from './alt-attrs.js'
-import { toModifiers } from './query.js'
+import { editQuery, toModifiers } from './query.js'
 
 export type RemarkImageSaltOptions = {
   tagName?: string
@@ -21,22 +21,32 @@ export const remarkImageSalt: Plugin = function remarkImageSalt(
       const imageIdx = parent.children.findIndex((n) => n === node)
       const image: Image = node
 
+      let url = image.url
       const ex = image.alt ? attrs(image.alt) : { alt: '' }
       const properties: Properties = {}
       Object.entries(ex.properties || {}).forEach(([k, v]) => {
         let key = k
         let value = v
+        let set = true
         if (k === 'modifiers') {
           key = `:${k}`
           value = JSON.stringify(toModifiers(`${v}`))
+        } else if (k === 'qq') {
+          url = editQuery('', url, `${v}`, true) // start は baseURL 的なものを設定したときに.
+          set = false
+        } else if (k === 'q') {
+          url = editQuery('', url, `${v}`, false)
+          set = false
         }
-        properties[key] = value
+        if (set) {
+          properties[key] = value
+        }
       })
       const htmlTag: Element = {
         type: 'element',
         tagName: tagName || defaultTagName,
         properties: {
-          src: image.url,
+          src: url,
           title: image.title,
           alt: ex.alt,
           ...properties

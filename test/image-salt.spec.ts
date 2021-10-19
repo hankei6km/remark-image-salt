@@ -55,14 +55,22 @@ describe('remarkImageSalt', () => {
       '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg" alt="image1" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img>\n'
     )
   })
-  it('should generate nuxt-img tag', async () => {
+  it('should replace query parameter', async () => {
     expect(
       await f(
-        '# test\n## test1\nimage-salt-1\n\n![image1#d:300x200 class="light-img" sizes="sm:100vw md:50vw lg:400px"#](/path/to/iamge1.jpg)',
-        { tagName: 'nuxt-img' }
+        '# test\n## test1\nimage-salt-1\n\n![image1#qq="blur=100"#](/path/to/iamge1.jpg?w=300)'
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg" alt="image1" width="300" height="200" class="light-img" sizes="sm:100vw md:50vw lg:400px"></nuxt-img>\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<img src="/path/to/iamge1.jpg?blur=100" alt="image1">\n'
+    )
+  })
+  it('should merge query parameter', async () => {
+    expect(
+      await f(
+        '# test\n## test1\nimage-salt-1\n\n![image1#q="blur=100"#](/path/to/iamge1.jpg?w=300&blur=200)'
+      )
+    ).toEqual(
+      '# test\n\n## test1\n\nimage-salt-1\n\n<img src="/path/to/iamge1.jpg?w=300&#x26;blur=100" alt="image1">\n'
     )
   })
 })

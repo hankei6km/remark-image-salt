@@ -28,6 +28,32 @@ export function decodeBase64Url(v: string): string {
 }
 //-- ここまで
 
+export function editQuery(
+  start: string,
+  url: string,
+  params: string,
+  replace?: boolean
+): string {
+  if (url.startsWith(start)) {
+    const u = url.split('?', 2)
+    const srcQ = new URLSearchParams(replace ? '' : u[1] || '')
+    const q = new URLSearchParams(params)
+    q.forEach((v, k) => {
+      if (srcQ.has(k)) {
+        srcQ.set(k, v)
+      } else {
+        srcQ.append(k, v)
+      }
+    })
+    const p = srcQ.toString()
+    if (p) {
+      return `${u[0]}?${p}`
+    }
+    return u[0]
+  }
+  return url
+}
+
 const b64variantRegExp = /^(.+)64$/
 export function toModifiers(query: string): Record<string, any> {
   const ret: Record<string, any> = {}
