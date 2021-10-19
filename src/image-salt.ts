@@ -4,7 +4,7 @@ import { Parent, Image, HTML } from 'mdast'
 import { Element, Properties } from 'hast'
 import { visitParents } from 'unist-util-visit-parents'
 import { toHtml } from 'hast-util-to-html'
-import { attrs } from './alt-attrs.js'
+import { attrs, decodeAttrs } from './alt-attrs.js'
 import { editQuery, toModifiers } from './query.js'
 import { trimBaseURL } from './util.js'
 
@@ -34,9 +34,7 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
       inKeepBaseURL !== undefined ? inKeepBaseURL : defaultOpts.keepBaseURL,
     baseAttrs: inBaseAttrs !== undefined ? inBaseAttrs : defaultOpts.baseAttrs
   }
-  const { properties: baseProperties = {} } = baseAttrs
-    ? attrs(`#${baseAttrs}#`)
-    : { properties: {} }
+  const baseProperties = baseAttrs ? decodeAttrs(`${baseAttrs}`) : {}
 
   return function transformer(tree: Node): void {
     visitParents(tree, 'image', (node, parents) => {
@@ -51,7 +49,7 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
         Object.assign(workProperties, baseProperties, ex.properties || {})
         const properties: Properties = {}
         Object.assign(properties)
-        Object.entries(workProperties || {}).forEach(([k, v]) => {
+        Object.entries(workProperties).forEach(([k, v]) => {
           let key = k
           let value = v
           let set = true
