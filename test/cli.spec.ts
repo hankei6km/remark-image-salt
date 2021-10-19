@@ -28,11 +28,7 @@ describe('cli()', () => {
 
     expect(
       await cli({
-        ...io,
-        tagName: '',
-        baseURL: '',
-        keepBaseURL: false,
-        baseAttrs: ''
+        ...io
       })
     ).toEqual(0)
     expect(outData).toMatchSnapshot()
@@ -53,10 +49,7 @@ describe('cli()', () => {
     expect(
       await cli({
         ...io,
-        tagName: '',
-        baseURL: 'https://localhost:3000/',
-        keepBaseURL: false,
-        baseAttrs: ''
+        baseURL: 'https://localhost:3000/'
       })
     ).toEqual(0)
     expect(outData).toMatchSnapshot()
@@ -77,10 +70,8 @@ describe('cli()', () => {
     expect(
       await cli({
         ...io,
-        tagName: '',
         baseURL: 'https://localhost:3000/',
-        keepBaseURL: true,
-        baseAttrs: ''
+        keepBaseURL: true
       })
     ).toEqual(0)
     expect(outData).toMatchSnapshot()
@@ -101,7 +92,6 @@ describe('cli()', () => {
     expect(
       await cli({
         ...io,
-        tagName: '',
         baseURL: 'https://localhost:3000/',
         keepBaseURL: true,
         baseAttrs: 'provider="imgix" class="light-img"'

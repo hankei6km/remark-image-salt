@@ -38,10 +38,10 @@ import cli from './cli.js'
       stdin: process.stdin,
       stdout: process.stdout,
       stderr: process.stderr,
-      tagName: argv['tag-name'] || '',
-      baseURL: argv['base-url'] || '',
-      keepBaseURL: argv['keep-base-url'] || false,
-      baseAttrs: argv['base-attrs'] || ''
+      tagName: argv['tag-name'],
+      baseURL: argv['base-url'],
+      keepBaseURL: argv['keep-base-url'],
+      baseAttrs: argv['base-attrs']
     })
   )
 })()

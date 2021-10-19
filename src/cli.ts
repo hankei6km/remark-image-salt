@@ -9,7 +9,7 @@ type Opts = {
   stdin: Readable
   stdout: Writable
   stderr: Writable
-} & Required<RemarkImageSaltOptions>
+} & RemarkImageSaltOptions
 const cli = async (opts: Opts): Promise<number> => {
   const { stdin, stdout, stderr, ...imageSaltOpts } = opts
   try {

@@ -24,14 +24,18 @@ const defaultOpts: Required<RemarkImageSaltOptions> = {
 export const remarkImageSalt: Plugin = function remarkImageSalt({
   tagName: inTagName,
   baseURL: inBaseURL,
-  keepBaseURL,
+  keepBaseURL: inKeepBaseURL,
   baseAttrs: inBaseAttrs
 }: RemarkImageSaltOptions = defaultOpts): Transformer {
-  const tagName = inTagName || defaultOpts.tagName
-  const baseURL = inBaseURL || defaultOpts.baseURL
-  const baseAttr = inBaseAttrs || defaultOpts.baseAttrs
-  const { properties: baseProperties = {} } = baseAttr
-    ? attrs(`#${baseAttr}#`)
+  const { tagName, baseURL, keepBaseURL, baseAttrs }: typeof defaultOpts = {
+    tagName: inTagName !== undefined ? inTagName : defaultOpts.tagName,
+    baseURL: inBaseURL !== undefined ? inBaseURL : defaultOpts.baseURL,
+    keepBaseURL:
+      inKeepBaseURL !== undefined ? inKeepBaseURL : defaultOpts.keepBaseURL,
+    baseAttrs: inBaseAttrs !== undefined ? inBaseAttrs : defaultOpts.baseAttrs
+  }
+  const { properties: baseProperties = {} } = baseAttrs
+    ? attrs(`#${baseAttrs}#`)
     : { properties: {} }
 
   return function transformer(tree: Node): void {
