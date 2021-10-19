@@ -3,7 +3,6 @@ import { fromParse5 } from 'hast-util-from-parse5'
 import { Element } from 'hast'
 import { Node } from 'unist'
 import { Properties } from 'hast'
-import { unified } from 'unified'
 
 export type ExtractAttrs = {
   source: string
