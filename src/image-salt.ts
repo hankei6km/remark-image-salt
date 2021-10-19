@@ -1,10 +1,11 @@
 import { Plugin, Transformer } from 'unified'
 import { Node } from 'unist'
 import { Parent, Image, HTML } from 'mdast'
-import { Element } from 'hast'
+import { Element, Properties } from 'hast'
 import { visitParents } from 'unist-util-visit-parents'
 import { toHtml } from 'hast-util-to-html'
 import { attrs } from './alt-attrs.js'
+import { toModifiers } from './query.js'
 
 export type RemarkImageSaltOptions = {
   tagName?: string
@@ -21,6 +22,16 @@ export const remarkImageSalt: Plugin = function remarkImageSalt(
       const image: Image = node
 
       const ex = image.alt ? attrs(image.alt) : { alt: '' }
+      const properties: Properties = {}
+      Object.entries(ex.properties || {}).forEach(([k, v]) => {
+        let key = k
+        let value = v
+        if (k === 'modifiers') {
+          key = `:${k}`
+          value = JSON.stringify(toModifiers(`${v}`))
+        }
+        properties[key] = value
+      })
       const htmlTag: Element = {
         type: 'element',
         tagName: tagName || defaultTagName,
@@ -28,7 +39,7 @@ export const remarkImageSalt: Plugin = function remarkImageSalt(
           src: image.url,
           title: image.title,
           alt: ex.alt,
-          ...ex.properties
+          ...properties
         },
         children: []
       }

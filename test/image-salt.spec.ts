@@ -45,6 +45,16 @@ describe('remarkImageSalt', () => {
       '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg" alt="image1"></nuxt-img>\n'
     )
   })
+  it('should convert(decode) modifiers to :modifiers', async () => {
+    expect(
+      await f(
+        '# test\n## test1\nimage-salt-1\n\n![image1#modifiers="blur=100"#](/path/to/iamge1.jpg)',
+        { tagName: 'nuxt-img' }
+      )
+    ).toEqual(
+      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg" alt="image1" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img>\n'
+    )
+  })
   it('should generate nuxt-img tag', async () => {
     expect(
       await f(
