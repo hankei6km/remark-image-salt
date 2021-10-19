@@ -50,7 +50,7 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
         const workProperties: Properties = {}
         Object.assign(workProperties, baseProperties, ex.properties || {})
         const properties: Properties = {}
-        Object.assign(properties)
+
         Object.entries(workProperties).forEach(([k, v]) => {
           let key = k
           let value = v
