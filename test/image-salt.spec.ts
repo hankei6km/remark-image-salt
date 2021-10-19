@@ -110,4 +110,30 @@ describe('remarkImageSalt', () => {
       '# test\n\n## test1\n\nimage-salt-1\n\n<img src="https://localhost:3000/path/to/iamge1.jpg?w=300&#x26;blur=100" alt="image1">\n'
     )
   })
+  it('should apply baseAttrs', async () => {
+    expect(
+      await f(
+        '# test\n## test1\nimage-salt-1\n\n![image1#modifiers="blur=100"#](/path/to/iamge1.jpg)',
+        {
+          tagName: 'nuxt-img',
+          baseAttrs: 'provider="imgix"'
+        }
+      )
+    ).toEqual(
+      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg" alt="image1" provider="imgix" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img>\n'
+    )
+  })
+  it('should overwrite baseAttrs', async () => {
+    expect(
+      await f(
+        '# test\n## test1\nimage-salt-1\n\n![image1#class="dark-img" modifiers="blur=100"#](/path/to/iamge1.jpg)',
+        {
+          tagName: 'nuxt-img',
+          baseAttrs: 'provider="imgix" class="light-img"'
+        }
+      )
+    ).toEqual(
+      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg" alt="image1" provider="imgix" class="dark-img" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img>\n'
+    )
+  })
 })

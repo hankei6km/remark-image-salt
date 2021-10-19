@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`cli() should apply baseAttrs 1`] = `
+"# test
+
+## test1
+
+image-salt-1
+
+<img src=\\"https://localhost:3000/path/to/iamge1.jpg\\" alt=\\"image1\\" provider=\\"imgix\\" class=\\"light-img\\">
+
+## test2
+
+image-salt-2
+
+![image2](https://localhost:3001/path/to/iamge2.jpg)
+"
+`;
+
 exports[`cli() should keep baseURL 1`] = `
 "# test
 

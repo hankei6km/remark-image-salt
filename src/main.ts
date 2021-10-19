@@ -24,6 +24,11 @@ import cli from './cli.js'
         type: 'boolean',
         required: false,
         description: 'keep baseURL in src of image'
+      },
+      'base-attrs': {
+        type: 'string',
+        required: false,
+        description: 'base attrs to set tag generated'
       }
     })
     .help().argv
@@ -35,7 +40,8 @@ import cli from './cli.js'
       stderr: process.stderr,
       tagName: argv['tag-name'] || '',
       baseURL: argv['base-url'] || '',
-      keepBaseURL: argv['keep-base-url'] || false
+      keepBaseURL: argv['keep-base-url'] || false,
+      baseAttrs: argv['base-attrs'] || ''
     })
   )
 })()

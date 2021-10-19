@@ -12,18 +12,26 @@ export type RemarkImageSaltOptions = {
   tagName?: string
   baseURL?: string
   keepBaseURL?: boolean
+  baseAttrs?: string
 }
 const defaultOpts: Required<RemarkImageSaltOptions> = {
   tagName: 'img',
   baseURL: '',
-  keepBaseURL: false
+  keepBaseURL: false,
+  baseAttrs: ''
 }
 
 export const remarkImageSalt: Plugin = function remarkImageSalt({
   tagName,
   baseURL,
-  keepBaseURL
+  keepBaseURL,
+  baseAttrs
 }: RemarkImageSaltOptions = defaultOpts): Transformer {
+  const baseAttrStr = baseAttrs || defaultOpts.baseAttrs
+  const { properties: baseProperties = {} } = baseAttrStr
+    ? attrs(`#${baseAttrStr}#`)
+    : { properties: {} }
+
   return function transformer(tree: Node): void {
     visitParents(tree, 'image', (node, parents) => {
       const parent: Parent = parents[parents.length - 1]
@@ -33,8 +41,11 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
       if (image.url.startsWith(baseURL || defaultOpts.baseURL)) {
         let url = image.url
         const ex = image.alt ? attrs(image.alt) : { alt: '' }
+        const workProperties: Properties = {}
+        Object.assign(workProperties, baseProperties, ex.properties || {})
         const properties: Properties = {}
-        Object.entries(ex.properties || {}).forEach(([k, v]) => {
+        Object.assign(properties)
+        Object.entries(workProperties || {}).forEach(([k, v]) => {
           let key = k
           let value = v
           let set = true

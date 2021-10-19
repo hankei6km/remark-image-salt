@@ -3,35 +3,36 @@ import { PassThrough } from 'stream'
 import cli from '../src/cli.js'
 
 describe('cli()', () => {
-  let stdin: PassThrough
-  let stdout: PassThrough
-  let stderr: PassThrough
+  const io: Record<'stdin' | 'stdout' | 'stderr', PassThrough> = {
+    stdin: new PassThrough(),
+    stdout: new PassThrough(),
+    stderr: new PassThrough()
+  }
   beforeEach(() => {
-    stdin = new PassThrough()
-    stdout = new PassThrough()
-    stderr = new PassThrough()
+    io.stdin = new PassThrough()
+    io.stdout = new PassThrough()
+    io.stderr = new PassThrough()
   })
 
   it('should return stdout with exitcode=0', async () => {
     let outData = ''
-    stdout.on('data', (d) => (outData = outData + d))
+    io.stdout.on('data', (d) => (outData = outData + d))
     let errData = ''
-    stderr.on('data', (d) => (errData = errData + d))
+    io.stderr.on('data', (d) => (errData = errData + d))
     process.nextTick(() => {
-      stdin.write(
+      io.stdin.write(
         '# test\n## test1\nimage-salt-1\n\n![image1](/path/to/iamge1.jpg)\n## test2\nimage-salt-2\n\n![image2](/path/to/iamge2.jpg)'
       )
-      stdin.end()
+      io.stdin.end()
     })
 
     expect(
       await cli({
-        stdin,
-        stdout,
-        stderr,
+        ...io,
         tagName: '',
         baseURL: '',
-        keepBaseURL: false
+        keepBaseURL: false,
+        baseAttrs: ''
       })
     ).toEqual(0)
     expect(outData).toMatchSnapshot()
@@ -39,24 +40,23 @@ describe('cli()', () => {
   })
   it('should skip url was not matched baseURL', async () => {
     let outData = ''
-    stdout.on('data', (d) => (outData = outData + d))
+    io.stdout.on('data', (d) => (outData = outData + d))
     let errData = ''
-    stderr.on('data', (d) => (errData = errData + d))
+    io.stderr.on('data', (d) => (errData = errData + d))
     process.nextTick(() => {
-      stdin.write(
+      io.stdin.write(
         '# test\n## test1\nimage-salt-1\n\n![image1](https://localhost:3000/path/to/iamge1.jpg)\n## test2\nimage-salt-2\n\n![image2](https://localhost:3001/path/to/iamge2.jpg)'
       )
-      stdin.end()
+      io.stdin.end()
     })
 
     expect(
       await cli({
-        stdin,
-        stdout,
-        stderr,
+        ...io,
         tagName: '',
         baseURL: 'https://localhost:3000/',
-        keepBaseURL: false
+        keepBaseURL: false,
+        baseAttrs: ''
       })
     ).toEqual(0)
     expect(outData).toMatchSnapshot()
@@ -64,24 +64,47 @@ describe('cli()', () => {
   })
   it('should keep baseURL', async () => {
     let outData = ''
-    stdout.on('data', (d) => (outData = outData + d))
+    io.stdout.on('data', (d) => (outData = outData + d))
     let errData = ''
-    stderr.on('data', (d) => (errData = errData + d))
+    io.stderr.on('data', (d) => (errData = errData + d))
     process.nextTick(() => {
-      stdin.write(
+      io.stdin.write(
         '# test\n## test1\nimage-salt-1\n\n![image1](https://localhost:3000/path/to/iamge1.jpg)\n## test2\nimage-salt-2\n\n![image2](https://localhost:3001/path/to/iamge2.jpg)'
       )
-      stdin.end()
+      io.stdin.end()
     })
 
     expect(
       await cli({
-        stdin,
-        stdout,
-        stderr,
+        ...io,
         tagName: '',
         baseURL: 'https://localhost:3000/',
-        keepBaseURL: true
+        keepBaseURL: true,
+        baseAttrs: ''
+      })
+    ).toEqual(0)
+    expect(outData).toMatchSnapshot()
+    expect(errData).toEqual('')
+  })
+  it('should apply baseAttrs', async () => {
+    let outData = ''
+    io.stdout.on('data', (d) => (outData = outData + d))
+    let errData = ''
+    io.stderr.on('data', (d) => (errData = errData + d))
+    process.nextTick(() => {
+      io.stdin.write(
+        '# test\n## test1\nimage-salt-1\n\n![image1](https://localhost:3000/path/to/iamge1.jpg)\n## test2\nimage-salt-2\n\n![image2](https://localhost:3001/path/to/iamge2.jpg)'
+      )
+      io.stdin.end()
+    })
+
+    expect(
+      await cli({
+        ...io,
+        tagName: '',
+        baseURL: 'https://localhost:3000/',
+        keepBaseURL: true,
+        baseAttrs: 'provider="imgix" class="light-img"'
       })
     ).toEqual(0)
     expect(outData).toMatchSnapshot()
@@ -89,24 +112,23 @@ describe('cli()', () => {
   })
   it('should return stderr with exitcode=1', async () => {
     let outData = ''
-    stdout.on('data', (d) => (outData = outData + d))
+    io.stdout.on('data', (d) => (outData = outData + d))
     let errData = ''
-    stderr.on('data', (d) => (errData = errData + d))
+    io.stderr.on('data', (d) => (errData = errData + d))
     process.nextTick(() => {
-      stdin.write(
+      io.stdin.write(
         '# test\n## test1\nimage-salt-1\n\n![image1#d300x200>#](/path/to/iamge1.jpg)'
       )
-      stdin.end()
+      io.stdin.end()
     })
 
     expect(
       await cli({
-        stdin,
-        stdout,
-        stderr,
+        ...io,
         tagName: '',
         baseURL: '',
-        keepBaseURL: false
+        keepBaseURL: false,
+        baseAttrs: ''
       })
     ).toEqual(1)
     expect(outData).toEqual('')
