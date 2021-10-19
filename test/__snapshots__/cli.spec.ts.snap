@@ -7,13 +7,13 @@ exports[`cli() should apply baseAttrs 1`] = `
 
 image-salt-1
 
-<img src=\\"https://localhost:3000/path/to/iamge1.jpg\\" alt=\\"image1\\" provider=\\"imgix\\" class=\\"light-img\\">
+<img src=\\"https://localhost:3000/path/to/image1.jpg\\" alt=\\"image1\\" provider=\\"imgix\\" class=\\"light-img\\">
 
 ## test2
 
 image-salt-2
 
-![image2](https://localhost:3001/path/to/iamge2.jpg)
+![image2](https://localhost:3001/path/to/image2.jpg)
 "
 `;
 
@@ -24,13 +24,13 @@ exports[`cli() should keep baseURL 1`] = `
 
 image-salt-1
 
-<img src=\\"https://localhost:3000/path/to/iamge1.jpg\\" alt=\\"image1\\">
+<img src=\\"https://localhost:3000/path/to/image1.jpg\\" alt=\\"image1\\">
 
 ## test2
 
 image-salt-2
 
-![image2](https://localhost:3001/path/to/iamge2.jpg)
+![image2](https://localhost:3001/path/to/image2.jpg)
 "
 `;
 
@@ -46,13 +46,13 @@ exports[`cli() should return stdout with exitcode=0 1`] = `
 
 image-salt-1
 
-<img src=\\"/path/to/iamge1.jpg\\" alt=\\"image1\\">
+<img src=\\"/path/to/image1.jpg\\" alt=\\"image1\\">
 
 ## test2
 
 image-salt-2
 
-<img src=\\"/path/to/iamge2.jpg\\" alt=\\"image2\\">
+<img src=\\"/path/to/image2.jpg\\" alt=\\"image2\\">
 "
 `;
 
@@ -63,12 +63,12 @@ exports[`cli() should skip url was not matched baseURL 1`] = `
 
 image-salt-1
 
-<img src=\\"/path/to/iamge1.jpg\\" alt=\\"image1\\">
+<img src=\\"/path/to/image1.jpg\\" alt=\\"image1\\">
 
 ## test2
 
 image-salt-2
 
-![image2](https://localhost:3001/path/to/iamge2.jpg)
+![image2](https://localhost:3001/path/to/image2.jpg)
 "
 `;
