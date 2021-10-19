@@ -136,4 +136,22 @@ describe('remarkImageSalt', () => {
       '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg" alt="image1" provider="imgix" class="dark-img" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img>\n'
     )
   })
+  it('should generate anchor tag', async () => {
+    expect(
+      await f(
+        '# test\n## test1\nimage-salt-1\n\n![image1#thumb#](/path/to/image1.jpg?w=300&h=200)'
+      )
+    ).toEqual(
+      '# test\n\n## test1\n\nimage-salt-1\n\n<a href="/path/to/image1.jpg" target="_blank" rel="noopener noreferrer"><img src="/path/to/image1.jpg?w=300&#x26;h=200" alt="image1"></a>\n'
+    )
+  })
+  it('should generate anchor tag(query)', async () => {
+    expect(
+      await f(
+        '# test\n## test1\nimage-salt-1\n\n![image1#thumb="w=600"#](/path/to/image1.jpg?w=300&h=200)'
+      )
+    ).toEqual(
+      '# test\n\n## test1\n\nimage-salt-1\n\n<a href="/path/to/image1.jpg?w=600" target="_blank" rel="noopener noreferrer"><img src="/path/to/image1.jpg?w=300&#x26;h=200" alt="image1"></a>\n'
+    )
+  })
 })

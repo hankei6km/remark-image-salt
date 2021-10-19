@@ -43,7 +43,9 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
       const image: Image = node
 
       if (image.url.startsWith(baseURL)) {
-        let url = image.url
+        let imageURL = image.url
+        let largeImageURL = ''
+
         const ex = image.alt ? attrs(image.alt) : { alt: '' }
         const workProperties: Properties = {}
         Object.assign(workProperties, baseProperties, ex.properties || {})
@@ -53,14 +55,19 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
           let key = k
           let value = v
           let set = true
+          // 特殊な属性の一覧を別に作れないか?
+          // ("d:" 属性も処理が分散している)
           if (k === 'modifiers') {
             key = `:${k}`
             value = JSON.stringify(toModifiers(`${v}`))
           } else if (k === 'qq') {
-            url = editQuery(baseURL, url, `${v}`, true)
+            imageURL = editQuery(baseURL, imageURL, `${v}`, true)
             set = false
           } else if (k === 'q') {
-            url = editQuery(baseURL, url, `${v}`, false)
+            imageURL = editQuery(baseURL, imageURL, `${v}`, false)
+            set = false
+          } else if (k === 'thumb') {
+            largeImageURL = editQuery(baseURL, imageURL, `${v}`, true)
             set = false
           }
           if (set) {
@@ -68,22 +75,41 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
           }
         })
         if (!keepBaseURL) {
-          url = trimBaseURL(baseURL, url)
+          imageURL = trimBaseURL(baseURL, imageURL)
         }
-        const htmlTag: Element = {
+
+        let htmlNode: HTML
+        const imageTag: Element = {
           type: 'element',
           tagName,
           properties: {
-            src: url,
+            src: imageURL,
             title: image.title,
             alt: ex.alt,
             ...properties
           },
           children: []
         }
-        const htmlNode: HTML = {
-          type: 'html',
-          value: toHtml(htmlTag)
+        if (largeImageURL === '') {
+          htmlNode = {
+            type: 'html',
+            value: toHtml(imageTag)
+          }
+        } else {
+          const largeImageTag: Element = {
+            type: 'element',
+            tagName: 'a',
+            properties: {
+              href: largeImageURL,
+              target: '_blank',
+              rel: 'noopener noreferrer'
+            },
+            children: [imageTag]
+          }
+          htmlNode = {
+            type: 'html',
+            value: toHtml(largeImageTag)
+          }
         }
         parent.children[imageIdx] = htmlNode
       }
