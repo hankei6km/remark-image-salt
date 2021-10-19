@@ -22,14 +22,16 @@ const defaultOpts: Required<RemarkImageSaltOptions> = {
 }
 
 export const remarkImageSalt: Plugin = function remarkImageSalt({
-  tagName,
-  baseURL,
+  tagName: inTagName,
+  baseURL: inBaseURL,
   keepBaseURL,
-  baseAttrs
+  baseAttrs: inBaseAttrs
 }: RemarkImageSaltOptions = defaultOpts): Transformer {
-  const baseAttrStr = baseAttrs || defaultOpts.baseAttrs
-  const { properties: baseProperties = {} } = baseAttrStr
-    ? attrs(`#${baseAttrStr}#`)
+  const tagName = inTagName || defaultOpts.tagName
+  const baseURL = inBaseURL || defaultOpts.baseURL
+  const baseAttr = inBaseAttrs || defaultOpts.baseAttrs
+  const { properties: baseProperties = {} } = baseAttr
+    ? attrs(`#${baseAttr}#`)
     : { properties: {} }
 
   return function transformer(tree: Node): void {
@@ -38,7 +40,7 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
       const imageIdx = parent.children.findIndex((n) => n === node)
       const image: Image = node
 
-      if (image.url.startsWith(baseURL || defaultOpts.baseURL)) {
+      if (image.url.startsWith(baseURL)) {
         let url = image.url
         const ex = image.alt ? attrs(image.alt) : { alt: '' }
         const workProperties: Properties = {}
@@ -53,10 +55,10 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
             key = `:${k}`
             value = JSON.stringify(toModifiers(`${v}`))
           } else if (k === 'qq') {
-            url = editQuery('', url, `${v}`, true) // start は baseURL 的なものを設定したときに.
+            url = editQuery(baseURL, url, `${v}`, true)
             set = false
           } else if (k === 'q') {
-            url = editQuery('', url, `${v}`, false)
+            url = editQuery(baseURL, url, `${v}`, false)
             set = false
           }
           if (set) {
@@ -68,7 +70,7 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
         }
         const htmlTag: Element = {
           type: 'element',
-          tagName: tagName || defaultOpts.tagName,
+          tagName,
           properties: {
             src: url,
             title: image.title,
