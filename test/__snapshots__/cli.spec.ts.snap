@@ -1,5 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`cli() should return stderr with exitcode=1 1`] = `
+"Error: extractAttrs: invalid attrs has injected
+"
+`;
+
 exports[`cli() should return stdout with exitcode=0 1`] = `
 "# test
 
@@ -7,12 +12,12 @@ exports[`cli() should return stdout with exitcode=0 1`] = `
 
 image-salt-1
 
-<img src=\\"/path/to/iamge1.jpg\\">
+<img src=\\"/path/to/iamge1.jpg\\" alt=\\"image1\\">
 
 ## test2
 
 image-salt-2
 
-<img src=\\"/path/to/iamge2.jpg\\">
+<img src=\\"/path/to/iamge2.jpg\\" alt=\\"image2\\">
 "
 `;

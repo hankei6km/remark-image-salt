@@ -4,6 +4,7 @@ import { Parent, Image, HTML } from 'mdast'
 import { Element } from 'hast'
 import { visitParents } from 'unist-util-visit-parents'
 import { toHtml } from 'hast-util-to-html'
+import { attrs } from './alt-attrs.js'
 
 export type RemarkImageSaltOptions = {
   tagName?: string
@@ -19,12 +20,15 @@ export const remarkImageSalt: Plugin = function remarkImageSalt(
       const imageIdx = parent.children.findIndex((n) => n === node)
       const image: Image = node
 
+      const ex = image.alt ? attrs(image.alt) : { alt: '' }
       const htmlTag: Element = {
         type: 'element',
         tagName: tagName || defaultTagName,
         properties: {
           src: image.url,
-          title: image.title
+          title: image.title,
+          alt: ex.alt,
+          ...ex.properties
         },
         children: []
       }

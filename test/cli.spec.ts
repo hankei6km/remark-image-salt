@@ -1,5 +1,5 @@
 import { PassThrough } from 'stream'
-import cli from '../src/cli'
+import cli from '../src/cli.js'
 
 describe('cli()', () => {
   it('should return stdout with exitcode=0', async () => {
@@ -27,5 +27,31 @@ describe('cli()', () => {
     ).toEqual(0)
     expect(outData).toMatchSnapshot()
     expect(errData).toEqual('')
+  })
+  it('should return stderr with exitcode=1', async () => {
+    const stdin = new PassThrough()
+    const stdout = new PassThrough()
+    const stderr = new PassThrough()
+    let outData = ''
+    stdout.on('data', (d) => (outData = outData + d))
+    let errData = ''
+    stderr.on('data', (d) => (errData = errData + d))
+    process.nextTick(() => {
+      stdin.write(
+        '# test\n## test1\nimage-salt-1\n\n![image1#d300x200>#](/path/to/iamge1.jpg)'
+      )
+      stdin.end()
+    })
+
+    expect(
+      await cli({
+        stdin,
+        stdout,
+        stderr,
+        tagName: ''
+      })
+    ).toEqual(1)
+    expect(outData).toEqual('')
+    expect(errData).toMatchSnapshot()
   })
 })

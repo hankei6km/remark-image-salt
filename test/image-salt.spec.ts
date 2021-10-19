@@ -24,23 +24,35 @@ describe('remarkImageSalt', () => {
       )
   }
 
+  // attrs がこの順番で出力されるとは限らない.
+  // 変化するようならユーティリティを利用.
   it('should generate img tag', async () => {
     expect(
       await f(
-        '# test\n## test1\nimage-salt-1\n\n![image1](/path/to/iamge1.jpg)\n## test2\nimage-salt-2\n\n![image2](/path/to/iamge2.jpg)'
+        '# test\n## test1\nimage-salt-1\n\n![image1](/path/to/iamge1.jpg)\n## test2\nimage-salt-2\n\n![](/path/to/iamge2.jpg)'
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<img src="/path/to/iamge1.jpg">\n\n## test2\n\nimage-salt-2\n\n<img src="/path/to/iamge2.jpg">\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<img src="/path/to/iamge1.jpg" alt="image1">\n\n## test2\n\nimage-salt-2\n\n<img src="/path/to/iamge2.jpg" alt="">\n'
     )
   })
-  it('should generate nux-img tag', async () => {
+  it('should generate nuxt-img tag', async () => {
     expect(
       await f(
         '# test\n## test1\nimage-salt-1\n\n![image1](/path/to/iamge1.jpg)',
         { tagName: 'nuxt-img' }
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg"></nuxt-img>\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg" alt="image1"></nuxt-img>\n'
+    )
+  })
+  it('should generate nuxt-img tag', async () => {
+    expect(
+      await f(
+        '# test\n## test1\nimage-salt-1\n\n![image1#d:300x200 class="light-img" sizes="sm:100vw md:50vw lg:400px"#](/path/to/iamge1.jpg)',
+        { tagName: 'nuxt-img' }
+      )
+    ).toEqual(
+      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/iamge1.jpg" alt="image1" width="300" height="200" class="light-img" sizes="sm:100vw md:50vw lg:400px"></nuxt-img>\n'
     )
   })
 })

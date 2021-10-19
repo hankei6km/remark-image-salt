@@ -37,7 +37,9 @@
     "csb:test": "npm test -- --runInBand --watchAll"
   },
   "dependencies": {
+    "hast-util-from-parse5": "^7.1.0",
     "hast-util-to-html": "^8.0.2",
+    "parse5": "^6.0.1",
     "remark": "^14.0.1",
     "unified": "^10.1.0",
     "unist-util-visit-parents": "^5.1.0",
