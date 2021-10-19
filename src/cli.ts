@@ -3,21 +3,15 @@ import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkFrontmatter from 'remark-frontmatter'
 import stringify from 'remark-stringify'
-
-import { remarkImageSalt } from './image-salt.js'
+import { remarkImageSalt, RemarkImageSaltOptions } from './image-salt.js'
 
 type Opts = {
   stdin: Readable
   stdout: Writable
   stderr: Writable
-  tagName: string
-}
-const cli = async ({
-  stdin,
-  stdout,
-  stderr,
-  tagName
-}: Opts): Promise<number> => {
+} & Required<RemarkImageSaltOptions>
+const cli = async (opts: Opts): Promise<number> => {
+  const { stdin, stdout, stderr, ...imageSaltOpts } = opts
   try {
     let source = ''
     await new Promise((resolve) => {
@@ -27,7 +21,7 @@ const cli = async ({
     const m = await unified()
       .use(remarkParse)
       .use(remarkFrontmatter, ['yaml', 'toml'])
-      .use(remarkImageSalt, { tagName })
+      .use(remarkImageSalt, { ...imageSaltOpts })
       .use(stringify)
       .freeze()
       .process(source)

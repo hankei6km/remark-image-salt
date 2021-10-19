@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { basename } from 'path/posix'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import cli from './cli.js'
@@ -13,6 +14,16 @@ import cli from './cli.js'
         type: 'string',
         required: false,
         description: 'a Tag name to use generated tag'
+      },
+      'base-url': {
+        type: 'string',
+        required: false,
+        description: 'select image node'
+      },
+      'keep-base-url': {
+        type: 'boolean',
+        required: false,
+        description: 'keep baseURL in src of image'
       }
     })
     .help().argv
@@ -22,7 +33,9 @@ import cli from './cli.js'
       stdin: process.stdin,
       stdout: process.stdout,
       stderr: process.stderr,
-      tagName:argv['tag-name']||''
+      tagName: argv['tag-name'] || '',
+      baseURL: argv['base-url'] || '',
+      keepBaseURL: argv['keep-base-url'] || false
     })
   )
 })()
