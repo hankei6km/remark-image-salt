@@ -1,19 +1,39 @@
-import { Writable } from 'stream'
-import countChars from './count.js'
+import { Readable, Writable } from 'stream'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkFrontmatter from 'remark-frontmatter'
+import stringify from 'remark-stringify'
+import { remarkImageSalt, RemarkImageSaltOptions } from './image-salt.js'
 
 type Opts = {
-  filenames: string[]
+  stdin: Readable
   stdout: Writable
   stderr: Writable
-}
-const cli = async ({ filenames, stdout, stderr }: Opts): Promise<number> => {
+} & RemarkImageSaltOptions
+const cli = async (opts: Opts): Promise<number> => {
+  const { stdin, stdout, stderr, ...imageSaltOpts } = opts
   try {
-    const len = filenames.length
-    for (let i = 0; i < len; i++) {
-      const filename = filenames[i]
-      const count = await countChars(filename)
-      stdout.write(`${filename}: ${count} chars\n`)
-    }
+    let source = ''
+    await new Promise((resolve) => {
+      stdin.on('data', (d) => (source = source + d))
+      stdin.on('end', () => resolve(source))
+    })
+    const m = await unified()
+      .use(remarkParse)
+      .use(remarkFrontmatter, ['yaml', 'toml'])
+      .use(remarkImageSalt, { ...imageSaltOpts })
+      .use(stringify)
+      .freeze()
+      .process(source)
+      .then(
+        (file) => {
+          return String(file)
+        },
+        (error) => {
+          throw error
+        }
+      )
+    stdout.write(m)
   } catch (err: any) {
     stderr.write(err.toString())
     stderr.write('\n')
