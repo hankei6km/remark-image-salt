@@ -37,8 +37,9 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
   const baseProperties = baseAttrs ? decodeAttrs(`${baseAttrs}`) : {}
 
   return function transformer(tree: Node): void {
-    visitParents(tree, 'image', (node, parents) => {
-      const parent: Parent = parents[parents.length - 1]
+    visitParents(tree, 'image', (node, parents: Parent[]) => {
+      const parentsLen = parents.length
+      const parent: Parent = parents[parentsLen - 1]
       const imageIdx = parent.children.findIndex((n) => n === node)
       const image: Image = node
 
@@ -78,7 +79,10 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
           imageURL = trimBaseURL(baseURL, imageURL)
         }
 
-        let htmlNode: HTML
+        const htmlNode: HTML = {
+          type: 'html',
+          value: ''
+        }
         const imageTag: Element = {
           type: 'element',
           tagName,
@@ -91,9 +95,18 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
           children: []
         }
         if (largeImageURL === '') {
-          htmlNode = {
-            type: 'html',
-            value: toHtml(imageTag)
+          if (
+            parentsLen < 2 ||
+            (parent.type === 'paragraph' && parent.children.length === 1)
+          ) {
+            const pTag: Element = {
+              type: 'element',
+              tagName: 'p',
+              children: [imageTag]
+            }
+            htmlNode.value = toHtml(pTag)
+          } else {
+            htmlNode.value = toHtml(imageTag)
           }
         } else {
           const largeImageTag: Element = {
@@ -106,10 +119,7 @@ export const remarkImageSalt: Plugin = function remarkImageSalt({
             },
             children: [imageTag]
           }
-          htmlNode = {
-            type: 'html',
-            value: toHtml(largeImageTag)
-          }
+          htmlNode.value = toHtml(largeImageTag)
         }
         parent.children[imageIdx] = htmlNode
       }

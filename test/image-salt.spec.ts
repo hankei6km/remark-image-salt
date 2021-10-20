@@ -32,7 +32,7 @@ describe('remarkImageSalt', () => {
         '# test\n## test1\nimage-salt-1\n\n![image1](/path/to/image1.jpg)\n## test2\nimage-salt-2\n\n![](/path/to/image2.jpg)'
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<img src="/path/to/image1.jpg" alt="image1">\n\n## test2\n\nimage-salt-2\n\n<img src="/path/to/image2.jpg" alt="">\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<p><img src="/path/to/image1.jpg" alt="image1"></p>\n\n## test2\n\nimage-salt-2\n\n<p><img src="/path/to/image2.jpg" alt=""></p>\n'
     )
   })
   it('should generate nuxt-img tag', async () => {
@@ -42,7 +42,7 @@ describe('remarkImageSalt', () => {
         { tagName: 'nuxt-img' }
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/image1.jpg" alt="image1"></nuxt-img>\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<p><nuxt-img src="/path/to/image1.jpg" alt="image1"></nuxt-img></p>\n'
     )
   })
   it('should convert(decode) modifiers to :modifiers', async () => {
@@ -52,7 +52,7 @@ describe('remarkImageSalt', () => {
         { tagName: 'nuxt-img' }
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/image1.jpg" alt="image1" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img>\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<p><nuxt-img src="/path/to/image1.jpg" alt="image1" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img></p>\n'
     )
   })
   it('should replace query parameter', async () => {
@@ -61,7 +61,7 @@ describe('remarkImageSalt', () => {
         '# test\n## test1\nimage-salt-1\n\n![image1#qq="blur=100"#](/path/to/image1.jpg?w=300)'
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<img src="/path/to/image1.jpg?blur=100" alt="image1">\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<p><img src="/path/to/image1.jpg?blur=100" alt="image1"></p>\n'
     )
   })
   it('should merge query parameter', async () => {
@@ -70,7 +70,7 @@ describe('remarkImageSalt', () => {
         '# test\n## test1\nimage-salt-1\n\n![image1#q="blur=100"#](/path/to/image1.jpg?w=300&blur=200)'
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<img src="/path/to/image1.jpg?w=300&#x26;blur=100" alt="image1">\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<p><img src="/path/to/image1.jpg?w=300&#x26;blur=100" alt="image1"></p>\n'
     )
   })
   it('should skip url that was not matched baseURL', async () => {
@@ -94,7 +94,7 @@ describe('remarkImageSalt', () => {
         }
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<img src="/path/to/image1.jpg?w=300&#x26;blur=100" alt="image1">\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<p><img src="/path/to/image1.jpg?w=300&#x26;blur=100" alt="image1"></p>\n'
     )
   })
   it('should keep baseURL', async () => {
@@ -107,7 +107,7 @@ describe('remarkImageSalt', () => {
         }
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<img src="https://localhost:3000/path/to/image1.jpg?w=300&#x26;blur=100" alt="image1">\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<p><img src="https://localhost:3000/path/to/image1.jpg?w=300&#x26;blur=100" alt="image1"></p>\n'
     )
   })
   it('should apply baseAttrs', async () => {
@@ -120,7 +120,7 @@ describe('remarkImageSalt', () => {
         }
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/image1.jpg" alt="image1" provider="imgix" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img>\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<p><nuxt-img src="/path/to/image1.jpg" alt="image1" provider="imgix" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img></p>\n'
     )
   })
   it('should overwrite baseAttrs', async () => {
@@ -133,7 +133,7 @@ describe('remarkImageSalt', () => {
         }
       )
     ).toEqual(
-      '# test\n\n## test1\n\nimage-salt-1\n\n<nuxt-img src="/path/to/image1.jpg" alt="image1" provider="imgix" class="dark-img" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img>\n'
+      '# test\n\n## test1\n\nimage-salt-1\n\n<p><nuxt-img src="/path/to/image1.jpg" alt="image1" provider="imgix" class="dark-img" :modifiers="{&#x22;blur&#x22;:&#x22;100&#x22;}"></nuxt-img></p>\n'
     )
   })
   it('should generate anchor tag', async () => {
