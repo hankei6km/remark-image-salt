@@ -1,5 +1,5 @@
 {
-  "name": "remark-image-salt",
+  "name": "@hankei6km/remark-image-salt",
   "version": "0.1.0",
   "description": "remark plugin that generates HTML tags using attributes embedded in alt text of Image",
   "author": "hankei6km <hankei6km@gmail.com> (https://github.com/hankei6km)",
